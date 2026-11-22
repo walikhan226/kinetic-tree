@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kinetic Tree — Clinic management, coming soon</title>
+  <meta name="description" content="Kinetic Tree is a simple, cloud-based clinic management platform: patients, medical history, doctors, appointments and billing in one calm screen. Coming soon." />
+  <meta property="og:title" content="Kinetic Tree — Clinic management, coming soon" />
+  <meta property="og:description" content="Patients, history, doctors, appointments and billing — one calm screen for your whole clinic. Coming soon." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0f5c4d" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f5c4d'/%3E%3Cpath d='M16 26V14M16 18l-5-4M16 16l5-5' stroke='%23d9f7ec' stroke-width='2.4' stroke-linecap='round'/%3E%3Ccircle cx='11' cy='13' r='2.6' fill='%237de3bf'/%3E%3Ccircle cx='21' cy='10' r='2.6' fill='%237de3bf'/%3E%3Ccircle cx='16' cy='11' r='2.6' fill='%23d9f7ec'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f6f8f5;
+      --surface: #ffffff;
+      --ink: #0e1f1a;
+      --muted: #55665f;
+      --line: #e2e8e3;
+      --brand: #0f5c4d;
+      --brand-2: #14806a;
+      --leaf: #7de3bf;
+      --leaf-soft: #e3f6ee;
+      --shadow: 0 1px 2px rgba(14, 31, 26, .05), 0 12px 32px -12px rgba(14, 31, 26, .18);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1512;
+        --surface: #12201b;
+        --ink: #e8f2ee;
+        --muted: #9db2aa;
+        --line: #1f3029;
+        --brand: #3fbf9a;
+        --brand-2: #5fd3b0;
+        --leaf: #7de3bf;
+        --leaf-soft: #15322a;
+        --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 32px -12px rgba(0, 0, 0, .6);
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    a { color: inherit; }
+    .wrap { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+    /* background canopy */
+    .canopy {
+      position: fixed; inset: -20vh -10vw auto -10vw; height: 80vh; z-index: -1; pointer-events: none;
+      background:
+        radial-gradient(40% 50% at 20% 30%, color-mix(in srgb, var(--leaf) 28%, transparent), transparent 70%),
+        radial-gradient(35% 45% at 80% 20%, color-mix(in srgb, var(--brand-2) 22%, transparent), transparent 70%);
+      filter: blur(10px);
+    }
+
+    header { padding: 22px 0; }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; font-size: 19px; letter-spacing: -.02em; text-decoration: none; }
+    .logo svg { width: 34px; height: 34px; flex: none; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px;
+      background: var(--leaf-soft); color: var(--brand); font-size: 13px; font-weight: 600;
+      border: 1px solid color-mix(in srgb, var(--brand) 18%, transparent);
+    }
+    .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--brand-2); position: relative; }
+    .pulse::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--brand-2); animation: ping 1.8s ease-out infinite; }
+    @keyframes ping { to { transform: scale(2.6); opacity: 0; } }
+
+    .hero { padding: 56px 0 40px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
+    h1 { font-size: clamp(36px, 6vw, 60px); line-height: 1.05; letter-spacing: -.035em; font-weight: 800; margin: 18px 0 18px; }
+    h1 em { font-style: normal; color: var(--brand); }
+    .lead { font-size: clamp(16px, 2vw, 19px); color: var(--muted); max-width: 520px; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 13px 20px; border-radius: 12px;
+      font-weight: 700; font-size: 15px; text-decoration: none; border: 1px solid transparent; transition: transform .15s, background .15s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--brand); color: #fff; }
+    @media (prefers-color-scheme: dark) { .btn-primary { color: #06120e; } }
+    .btn-ghost { background: var(--surface); border-color: var(--line); color: var(--ink); }
+    .ticks { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 22px; color: var(--muted); font-size: 14px; }
+    .ticks span::before { content: '✓'; color: var(--brand-2); font-weight: 800; margin-right: 6px; }
+
+    /* product preview card */
+    .preview { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 18px; }
+    .preview-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .preview-top b { font-size: 14px; }
+    .preview-top small { color: var(--muted); font-size: 12px; }
+    .appt { display: grid; grid-template-columns: 54px 1fr auto; gap: 12px; align-items: center; padding: 11px 12px; border-radius: 12px; border: 1px solid var(--line); margin-top: 8px; }
+    .appt time { font-size: 13px; font-weight: 700; color: var(--brand); }
+    .appt .who { font-size: 14px; font-weight: 600; line-height: 1.3; }
+    .appt .who small { display: block; font-weight: 500; color: var(--muted); font-size: 12px; }
+    .tag { font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 999px; white-space: nowrap; }
+    .t-in { background: var(--leaf-soft); color: var(--brand); }
+    .t-wait { background: color-mix(in srgb, #f5b84b 22%, transparent); color: #9a6408; }
+    .t-next { background: color-mix(in srgb, var(--line) 70%, transparent); color: var(--muted); }
+    @media (prefers-color-scheme: dark) { .t-wait { color: #f5c46b; } }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+    .stat { background: var(--bg); border-radius: 12px; padding: 10px 12px; }
+    .stat b { display: block; font-size: 20px; letter-spacing: -.02em; }
+    .stat span { font-size: 12px; color: var(--muted); }
+
+    section { padding: 56px 0; }
+    .eyebrow { color: var(--brand); font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    h2 { font-size: clamp(26px, 4vw, 38px); letter-spacing: -.03em; line-height: 1.15; margin: 8px 0 12px; }
+    .sub { color: var(--muted); max-width: 620px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; }
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
+    .icon { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: var(--leaf-soft); color: var(--brand); margin-bottom: 14px; }
+    .icon svg { width: 22px; height: 22px; }
+    .card h3 { font-size: 17px; letter-spacing: -.01em; margin-bottom: 6px; }
+    .card p { color: var(--muted); font-size: 14.5px; }
+
+    .roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; }
+    .role { padding: 20px 22px; border-radius: 18px; background: linear-gradient(160deg, var(--leaf-soft), transparent 70%); border: 1px solid var(--line); }
+    .role b { font-size: 16px; }
+    .role p { color: var(--muted); font-size: 14.5px; margin-top: 4px; }
+
+    .soon {
+      text-align: center; background: var(--brand); color: #fff; border-radius: 24px; padding: 48px 24px; position: relative; overflow: hidden;
+    }
+    @media (prefers-color-scheme: dark) { .soon { color: #06120e; } }
+    .soon h2 { margin-top: 0; }
+    .soon p { opacity: .85; max-width: 560px; margin: 0 auto; }
+    .soon .cta-row { justify-content: center; }
+    .soon .btn-light { background: #fff; color: #0f5c4d; }
+    .soon .btn-outline { border-color: rgba(255, 255, 255, .5); color: inherit; }
+    @media (prefers-color-scheme: dark) { .soon .btn-outline { border-color: rgba(6, 18, 14, .4); } }
+
+    footer { padding: 32px 0 44px; color: var(--muted); font-size: 14px; }
+    .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); padding-top: 22px; }
+
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 28px; }
+      .grid, .roles { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .grid, .roles { grid-template-columns: 1fr; }
+      .nav .pill { display: none; }
+      .appt { grid-template-columns: 46px 1fr; }
+      .appt .tag { grid-column: 2; justify-self: start; }
+    }
+    @media (prefers-reduced-motion: reduce) { .pulse::after { animation: none; } .btn { transition: none; } }
+  </style>
+</head>
+<body>
+  <div class="canopy" aria-hidden="true"></div>
+
+  <header>
+    <div class="wrap nav">
+      <a class="logo" href="#" aria-label="Kinetic Tree home">
+        <svg viewBox="0 0 34 34" aria-hidden="true">
+          <rect width="34" height="34" rx="10" fill="var(--brand)" />
+          <path d="M17 27V15M17 19l-5.5-4.5M17 17l5.5-5.5" stroke="#d9f7ec" stroke-width="2.4" stroke-linecap="round" />
+          <circle cx="11.5" cy="13.5" r="2.8" fill="#7de3bf" />
+          <circle cx="22.5" cy="10.5" r="2.8" fill="#7de3bf" />
+          <circle cx="17" cy="11.5" r="2.8" fill="#d9f7ec" />
+        </svg>
+        Kinetic Tree
+      </a>
+      <span class="pill"><span class="pulse"></span> Launching soon</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap hero">
+      <div>
+        <span class="pill"><span class="pulse"></span> Coming soon · Clinic management, simplified</span>
+        <h1>Your whole clinic,<br /><em>one calm screen.</em></h1>
+        <p class="lead">Kinetic Tree brings patients, medical history, doctors, appointments and billing together — so your front desk runs smoothly and your doctors focus on care, not paperwork.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#early-access">Get early access →</a>
+          <a class="btn btn-ghost" href="#features">See what's coming</a>
+        </div>
+        <div class="ticks">
+          <span>No installation</span><span>Works on any device</span><span>Each clinic's data kept private</span>
+        </div>
+      </div>
+
+      <div class="preview" role="img" aria-label="Preview of the Kinetic Tree appointments screen">
+        <div class="preview-top"><b>Today's appointments</b><small>Mon · 4 doctors on duty</small></div>
+        <div class="appt"><time>09:30</time><div class="who">Ali Hassan<small>Dr. Sara · Follow-up</small></div><span class="tag t-in">Checked in</span></div>
+        <div class="appt"><time>10:00</time><div class="who">Fatima Noor<small>Dr. Sara · Consultation</small></div><span class="tag t-wait">Waiting</span></div>
+        <div class="appt"><time>10:15</time><div class="who">Walk-in · Token T-04<small>Dr. Ahmed · General</small></div><span class="tag t-wait">Waiting</span></div>
+        <div class="appt"><time>10:30</time><div class="who">Zainab Iqbal<small>Dr. Ayesha · Dermatology</small></div><span class="tag t-next">Up next</span></div>
+        <div class="stats">
+          <div class="stat"><b>18</b><span>Appointments</span></div>
+          <div class="stat"><b>6</b><span>Walk-ins</span></div>
+          <div class="stat"><b>12</b><span>Visits done</span></div>
+        </div>
+      </div>
+    </div>
+
+    <section id="features">
+      <div class="wrap">
+        <span class="eyebrow">What's coming</span>
+        <h2>Everything a clinic needs. Nothing it doesn't.</h2>
+        <p class="sub">Built for small and growing clinics. A receptionist can learn it in half an hour.</p>
+        <div class="grid">
+          <div class="card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg></div>
+            <h3>Patients</h3><p>Register a patient in seconds with name and phone. Search instantly, with allergy alerts up front.</p>
+          </div>
+          <div class="card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div>
+            <h3>Medical history</h3><p>Every visit, diagnosis, vital sign and prescription on one timeline, so nothing gets lost in paper files.</p>
+          </div>
+          <div class="card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a6 6 0 0 0 12 0V3"/><path d="M12 15v2a4 4 0 0 0 8 0v-1"/><circle cx="20" cy="14" r="2"/></svg></div>
+            <h3>Doctors</h3><p>Specialties, fees and weekly schedules. See at a glance which doctor is free right now.</p>
+          </div>
+          <div class="card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18M9 15l2 2 4-4"/></svg></div>
+            <h3>Appointments</h3><p>Book in a few taps with no double-bookings. Walk-ins get a queue token instantly.</p>
+          </div>
+          <div class="card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg></div>
+            <h3>Billing</h3><p>Invoices, payments and printed receipts and prescriptions with your clinic's letterhead.</p>
+          </div>
+          <div class="card">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></div>
+            <h3>Private & secure</h3><p>Every clinic's data is kept completely separate, with roles for owners, doctors and reception.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <span class="eyebrow">Made for the whole team</span>
+        <h2>Everyone sees exactly what they need.</h2>
+        <div class="roles">
+          <div class="role"><b>Reception</b><p>Register patients, book appointments, check in walk-ins and collect payments.</p></div>
+          <div class="role"><b>Doctors</b><p>See today's queue, open the patient's history and record the visit and prescription.</p></div>
+          <div class="role"><b>Clinic owners</b><p>Track daily activity, revenue and staff from a simple dashboard.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="early-access">
+      <div class="wrap">
+        <div class="soon">
+          <span class="pill" style="background:rgba(255,255,255,.15);color:inherit;border-color:rgba(255,255,255,.3)"><span class="pulse" style="background:#7de3bf"></span> Coming soon</span>
+          <h2 style="margin-top:16px">Be one of the first clinics on Kinetic Tree.</h2>
+          <p>We're onboarding a small group of early clinics first. Get in touch to reserve your spot and help shape the product.</p>
+          <div class="cta-row" id="contact-links"></div>
+          <p id="contact-fallback" style="margin-top:22px;font-weight:600">Contact details coming soon.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <span>© <span id="year"></span> Kinetic Tree. All rights reserved.</span>
+      <span>Clinic management, simplified.</span>
+    </div>
+  </footer>
+
+  <script>
+    // Contact details — fill these in to show the buttons. Leave empty to hide.
+    const CONTACT = {
+      email: '',     // e.g. 'hello@kinetictree.com'
+      whatsapp: '',  // international format, digits only, e.g. '923001234567'
+    };
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const links = document.getElementById('contact-links');
+    const add = (href, label, cls) => {
+      const a = document.createElement('a');
+      a.className = 'btn ' + cls; a.href = href; a.textContent = label;
+      if (href.startsWith('http')) { a.target = '_blank'; a.rel = 'noopener'; }
+      links.appendChild(a);
+    };
+    if (CONTACT.email) add('mailto:' + CONTACT.email + '?subject=' + encodeURIComponent('Kinetic Tree early access'), 'Email us', 'btn-light');
+    if (CONTACT.whatsapp) add('https://wa.me/' + CONTACT.whatsapp + '?text=' + encodeURIComponent('Hi! I would like early access to Kinetic Tree for my clinic.'), 'Chat on WhatsApp', 'btn-outline');
+    if (links.children.length) document.getElementById('contact-fallback').remove();
+  </script>
+</body>
+</html>
